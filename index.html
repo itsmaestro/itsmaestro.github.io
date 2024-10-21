@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Enthusiast Hub</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
+            scroll-behavior: smooth;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(17, 17, 17, 0.8);
+            padding: 10px 0;
+            box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            height: 40px; /* Adjust as needed */
+        }
+        .logo img {
+            height: 100%;
+            width: auto;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #f0f;
+        }
+        section {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 80px 20px 20px;
+            box-sizing: border-box;
+        }
+        #youtube {
+            padding-top: 60px;
+        }
+        h1, h2 {
+            color: #0ff;
+            text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 15px #0ff;
+        }
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .social-link {
+            background-color: #f0f;
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px #f0f;
+        }
+        .social-link:hover {
+            background-color: #ff00ff;
+            box-shadow: 0 0 20px #f0f;
+            transform: scale(1.05);
+        }
+        #youtube-player {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="/api/placeholder/120/40" alt="CarGuy Logo">
+            </div>
+            <nav>
+                <a href="#youtube">YouTube</a>
+                <a href="#about">About</a>
+                <a href="#social">Social</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="youtube">
+        <h2>Latest YouTube Video</h2>
+        <div id="youtube-player"></div>
+    </section>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>I'm a dedicated car enthusiast sharing my love for all things automotive.</p>
+    </section>
+
+    <section id="social">
+        <h2>Follow My Journey</h2>
+        <div class="social-links">
+            <a href="https://www.instagram.com/johndoecars" class="social-link">Instagram</a>
+            <a href="https://www.youtube.com/c/johndoecars" class="social-link">YouTube</a>
+            <a href="https://www.tiktok.com/@johndoecars" class="social-link">TikTok</a>
+            <a href="https://twitter.com/johndoecars" class="social-link">Twitter</a>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Get In Touch</h2>
+        <p>Have questions or want to collaborate? Reach out to me!</p>
+    </section>
+
+    <script>
+        // Replace the videoId with the new YouTube video ID
+        var videoId = '02QrBxcuu0Q';
+
+        // Function to create the YouTube player
+        function createYouTubePlayer() {
+            var player;
+            var playerOptions = {
+                height: '100%',
+                width: '100%',
+                videoId: videoId,
+                playerVars: {
+                    'playsinline': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            };
+
+            player = new YT.Player('youtube-player', playerOptions);
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        function onPlayerStateChange(event) {
+            // Add any additional event handling logic here
+        }
+
+        // Load the YouTube API and create the player when it's ready
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Call the createYouTubePlayer function when the API is ready
+        window.onYouTubeIframeAPIReady = createYouTubePlayer;
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
