@@ -1,211 +1,467 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iStayJazzy</title>
+    <title>Study Materials</title>
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: Arial, sans-serif;
-            background-color: #111;
-            color: white;
-            scroll-behavior: smooth;
-        }
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(17, 17, 17, 0.8);
-            padding: 10px 0;
-            box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
-            z-index: 1000;
-        }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            line-height: 1.6;
+            padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
         }
-        .logo {
-            height: 60px; /* Adjust as needed */
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
-        .logo img {
-            height: 100%;
-            width: auto;
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
         }
-        nav a {
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #007bff;
             color: white;
             text-decoration: none;
-            margin-left: 20px;
-            transition: color 0.3s;
+            border-radius: 5px;
+            transition: background 0.3s;
+            cursor: pointer;
+            border: none;
         }
-        nav a:hover {
-            color: #f0f;
+
+        .nav-button:hover {
+            background: #0056b3;
         }
-        section {
-            min-height: 60vh; /* Further reduced from 80vh */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 40px 20px; /* Reduced padding */
-            box-sizing: border-box;
-            position: relative;
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 30px;
         }
-        #hero {
-            padding: 0;
-            margin: 0;
-            height: 100vh;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
+
+        .content-section {
+            display: none;
         }
-        #hero img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
+
+        .content-section.active {
+            display: block;
         }
-        #youtube {
-            padding-top: 30px; /* Further reduced from 40px */
+
+        .flashcard-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
-        h1, h2 {
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
-            margin-bottom: 10px; /* Further reduced from 15px */
+
+        .flashcard-title {
+            font-size: 1.5em;
+            color: #007bff;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
         }
-        .social-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+
+        .flashcard-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-top: 15px; /* Further reduced from 20px */
         }
-        .social-link {
-            background-color: #f0f;
-            color: white;
-            padding: 10px 15px; /* Further reduced padding */
-            text-decoration: none;
-            border-radius: 4px;
+
+        .flashcard-item {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .flashcard-label {
             font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 0 10px #f0f;
+            color: #333;
+            margin-bottom: 5px;
         }
-        .social-link:hover {
-            background-color: #ff00ff;
-            box-shadow: 0 0 20px #f0f;
-            transform: scale(1.05);
+
+        .flashcard-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
         }
-        #youtube-player {
-            width: 100%;
-            max-width: 800px;
-            aspect-ratio: 16/9;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+
+        .flashcard-nav-button {
+            padding: 5px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .flashcard-counter {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo">
-                <img src="newestlogo.png" alt="CarGuy Logo" style="margin-left: -10px;">
-            </div>
-            <div class="site-title" style="text-align: center;">
-                <h1 style="font-family: 'Segoe Script', 'Comic Sans MS', cursive; margin: 0; display: inline-block; transform: skew(-5deg, -5deg);">iStayJazzy</h1>
-            </div>
-            <nav>
-                <a href="#about">About</a>
-                <a href="#social">Social</a>
-                <a href="#contact">Contact</a>
-            </nav>
+    <div class="header">
+        <h1>Study Materials</h1>
+    </div>
+
+    <div class="nav-menu">
+        <button class="nav-button" onclick="showSection('welcome')">Home</button>
+        <button class="nav-button" onclick="showSection('flashcards')">Flashcards</button>
+        <button class="nav-button" onclick="showSection('notes')">Notes</button>
+        <button class="nav-button" onclick="showSection('practice')">Practice Tests</button>
+    </div>
+
+    <div id="welcome" class="content-section active">
+        <div class="welcome-section">
+            <h2>Study Material for Fire Academy</h2>
+            <p>Choose a section above to begin studying!</p>
         </div>
-    </header>
-    <section id="hero">
-        <img src="backgroundphotocar.jpg" alt="Background Car Photo" style="width: 100%; max-height: 80vh; object-fit: cover;">
-    </section>
+    </div>
 
-    <section id="youtube">
-        <h2>Latest YouTube Video</h2>
-        <div id="youtube-player"></div>
-    </section>
-
-    <section id="about">
-        <h2>About Me</h2>
-        <p>I'm a dedicated car enthusiast sharing my love for all things automotive.</p>
-    </section>
-
-    <section id="social">
-        <h2>Follow My Journey</h2>
-        <div class="social-links">
-            <a href="https://www.instagram.com/istayjazzy/" class="social-link" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://www.youtube.com/@istayjazzy5170" class="social-link" target="_blank" rel="noopener noreferrer">YouTube</a>
-            <a href="https://www.tiktok.com/@johndoecars" class="social-link" target="_blank" rel="noopener noreferrer">TikTok</a>
-            <a href="https://x.com/IStayJazzyY" class="social-link" target="_blank" rel="noopener noreferrer">Twitter</a>
+    <div id="flashcards" class="content-section">
+        <h2>Flashcards</h2>
+        <div class="flashcard-counter">Card <span id="currentCard">1</span> of 15</div>
+        <div class="flashcard-navigation">
+            <button class="flashcard-nav-button" onclick="previousCard()">Previous</button>
+            <button class="flashcard-nav-button" onclick="nextCard()">Next</button>
         </div>
-    </section>
+        <div id="flashcardContainer"></div>
+    </div>
 
-    <section id="contact">
-        <h2>Get In Touch</h2>
-        <p>Have questions or want to collaborate? Reach out to me!</p>
-    </section>
+    <div id="notes" class="content-section">
+        <h2>Notes</h2>
+        <!-- Notes content here -->
+    </div>
+
+    <div id="practice" class="content-section">
+        <h2>Practice Tests</h2>
+        <!-- Practice tests content here -->
+    </div>
 
     <script>
-        // Replace the videoId with the new YouTube video ID
-        var videoId = '02QrBxcuu0Q';
+        const flashcardsData = [
+            {
+                title: "Calcium Gluconate (Topical)",
+                tradeName: "Calgonate",
+                genericName: "Calcium Gluconate",
+                class: "Antidote, ointment",
+                route: "Topical Ointment",
+                dosage: "Put on skin until desired effect",
+                moa: "Binds to fluoride ions released by HF Acid",
+                indications: "Hydrofluoric Acid Burn",
+                contraindications: "Hypersensitivity",
+                desiredEffects: "Neutralize Burn",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Allergic Reaction"
+            },
+            {
+                title: "Aspirin",
+                tradeName: "Bayer",
+                genericName: "Aspirin",
+                class: "NSAID",
+                route: "Oral",
+                dosage: "4x81mg Tablets, No Peds Dose",
+                moa: "Anti-inflammatory, prevents platelets from clumping, inhibits platelet aggregation (blood slickener)",
+                indications: "Cardiac Chest Pain",
+                contraindications: "Hypersensitivity, GI bleeding",
+                desiredEffects: "Make the clot not worse, reduce chest pain",
+                preCautions: "Pain caused by trauma, use in pediatrics",
+                sideEffects: "Nausea, vomiting, bleeding, upset stomach"
+            },
+            {
+                title: "Oral Glucose",
+                tradeName: "Glucose",
+                genericName: "Oral Glucose",
+                class: "Oral Hyperglycemic",
+                route: "Oral",
+                dosage: "15g / tube both A + P",
+                moa: "Increases blood glucose levels by stimulating insulin secretion and being absorbed into blood stream",
+                indications: "Concious Hypoglycemic Patients",
+                contraindications: "Unconcious patients, cannot swallow",
+                desiredEffects: "Raises blood sugar",
+                preCautions: "insure a clear airway",
+                sideEffects: "risk of aspiration"
+            },
+            {
+                title: "Glucagon",
+                tradeName: "GlucaGen",
+                genericName: "glucagon",
+                class: "Diagnostics",
+                route: "Intramuscular",
+                dosage: "Adult= 1-2 mg, Peds= 0.1 mg/kg",
+                moa: "Insulin Antagonist",
+                indications: "release glucose into bloodstream",
+                contraindications: "Hypersensivity",
+                desiredEffects: "Raise blood sugar",
+                preCautions: "Allergies, frequent low blood sugar",
+                sideEffects: "Nausea, vomiting, headache"
+            },
+            {
+                title: "Activated Charcoal",
+                tradeName: "Actidose, Charcoal Aid, Instachar",
+                genericName: "Activated Charcoal",
+                class: "Organic Carbon Compound",
+                route: "Oral",
+                dosage: "250 mg",
+                moa: "Absorbs a variety of drugs/chems, binds to charcoal",
+                indications: "Acute ingested poisoning",
+                contraindications: "unprotected airway, intestinal obstruction",
+                desiredEffects: "Helps prevent poison from being absorbed by the stomach into the body",
+                preCautions: "Does not bind to all toxins, vomiting",
+                sideEffects: "Black stool, constipation, abdominal cramping, dehydration"
+            },
+            {
+                title: "Albuterol",
+                tradeName: "Proventic, ProAir",
+                genericName: "Albuterol Sulfate",
+                class: "andrenergic Bronchodilator",
+                route: "Inhalation",
+                dosage: "Adults=(3x) 2.5-5 mg Nebulizor, Peds=(3x) 2.5 mg Nebulizor",
+                moa: "B2 Agonist for inducing relaxation in bronchioles",
+                indications: "Respitory distress from bronchospasms, Asthma, wheezing",
+                contraindications: "Allergy",
+                desiredEffects: "Relax smooth bronchiole muscles, open lower airway, ease breathing",
+                preCautions: "Careful handling especially around heat, use own prescription",
+                sideEffects: "tremors, headache, throat irritation, dizziness"
+            },
+            {
+                title: "Oxygen",
+                tradeName: "Oxygen",
+                genericName: "Oxygen",
+                class: "Medical Gas",
+                route: "Nasal Canula, Non-rebreather, Bag-valve mask",
+                dosage: "NC=1-6L, NRB=10-15L, BVM=15-25L",
+                moa: "Restores O2 saturation",
+                indications: "Any condition with increased cardiac workload, respitory distress, or lack of perfusion",
+                contraindications: "none",
+                desiredEffects: "Increase the amount of oxygen in the bloodstream, restore normal cellular activity",
+                preCautions: "turn off when not in use, keep away from open flame",
+                sideEffects: "Headaches, sleepiness, nose/throat dryness"
+            },
+            {
+                title: "Amoxicillin",
+                tradeName: "Amoxil",
+                genericName: "Amoxicillin",
+                class: "Penicillin Antibiotic",
+                route: "Oral",
+                dosage: "250-500mg TID",
+                moa: "Cell wall synthesis inhibition",
+                indications: "Bacterial infections",
+                contraindications: "Penicillin allergy",
+                desiredEffects: "Bacterial death",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Diarrhea, Rash"
+            },
+            {
+                title: "Hydrochlorothiazide",
+                tradeName: "Microzide",
+                genericName: "HCTZ",
+                class: "Thiazide Diuretic",
+                route: "Oral",
+                dosage: "12.5-50mg daily",
+                moa: "Increases water excretion",
+                indications: "Hypertension, Edema",
+                contraindications: "Sulfa allergy",
+                desiredEffects: "Reduced fluid retention",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Electrolyte imbalance"
+            },
+            {
+                title: "Levothyroxine",
+                tradeName: "Synthroid",
+                genericName: "Levothyroxine",
+                class: "Thyroid hormone",
+                route: "Oral",
+                dosage: "25-200mcg daily",
+                moa: "Thyroid hormone replacement",
+                indications: "Hypothyroidism",
+                contraindications: "Thyrotoxicosis",
+                desiredEffects: "Normal thyroid levels",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Palpitations, Insomnia"
+            },
+            {
+                title: "Gabapentin",
+                tradeName: "Neurontin",
+                genericName: "Gabapentin",
+                class: "Anticonvulsant",
+                route: "Oral",
+                dosage: "300-3600mg daily",
+                moa: "GABA analog",
+                indications: "Neuropathic pain, Epilepsy",
+                contraindications: "Severe renal impairment",
+                desiredEffects: "Pain relief",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Dizziness, Drowsiness"
+            },
+            {
+                title: "Warfarin",
+                tradeName: "Coumadin",
+                genericName: "Warfarin",
+                class: "Anticoagulant",
+                route: "Oral",
+                dosage: "2-10mg daily",
+                moa: "Vitamin K antagonist",
+                indications: "Blood clot prevention",
+                contraindications: "Active bleeding",
+                desiredEffects: "Prevent blood clots",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Bleeding, Bruising"
+            },
+            {
+                title: "Furosemide",
+                tradeName: "Lasix",
+                genericName: "Furosemide",
+                class: "Loop Diuretic",
+                route: "Oral/IV",
+                dosage: "20-80mg daily",
+                moa: "Inhibits Na-K-Cl cotransport",
+                indications: "Edema, Heart failure",
+                contraindications: "Anuria",
+                desiredEffects: "Increased urine output",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Dehydration, Electrolyte imbalance"
+            },
+            {
+                title: "Amlodipine",
+                tradeName: "Norvasc",
+                genericName: "Amlodipine",
+                class: "Calcium Channel Blocker",
+                route: "Oral",
+                dosage: "2.5-10mg daily",
+                moa: "Blocks calcium channels",
+                indications: "Hypertension, Angina",
+                contraindications: "Cardiogenic shock",
+                desiredEffects: "Lower blood pressure",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Edema, Headache"
+            },
+            {
+                title: "Pantoprazole",
+                tradeName: "Protonix",
+                genericName: "Pantoprazole",
+                class: "Proton Pump Inhibitor",
+                route: "Oral/IV",
+                dosage: "40mg daily",
+                moa: "Reduces acid production",
+                indications: "GERD, Ulcers",
+                contraindications: "Hypersensitivity",
+                desiredEffects: "Reduced acid production",
+                preCautions: "Don't get in eyes or mouth",
+                sideEffects: "Headache, Diarrhea"
+            }
+        ];
 
-        // Function to create the YouTube player
-        function createYouTubePlayer() {
-            var player;
-            var playerOptions = {
-                height: '100%',
-                width: '100%',
-                videoId: videoId,
-                playerVars: {
-                    'playsinline': 1
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            };
+        let currentCardIndex = 0;
 
-            player = new YT.Player('youtube-player', playerOptions);
+        function createFlashcardHTML(cardData) {
+            return `
+                <div class="flashcard-section">
+                    <div class="flashcard-title">
+                        ${cardData.title}
+                    </div>
+                    <div class="flashcard-content">
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Trade Name</div>
+                            <div class="flashcard-text">${cardData.tradeName}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Generic Name</div>
+                            <div class="flashcard-text">${cardData.genericName}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Class</div>
+                            <div class="flashcard-text">${cardData.class}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Route</div>
+                            <div class="flashcard-text">${cardData.route}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Dosage</div>
+                            <div class="flashcard-text">${cardData.dosage}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">MOA</div>
+                            <div class="flashcard-text">${cardData.moa}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Indications</div>
+                            <div class="flashcard-text">${cardData.indications}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Contraindications</div>
+                            <div class="flashcard-text">${cardData.contraindications}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Desired Effects</div>
+                            <div class="flashcard-text">${cardData.desiredEffects}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Precautions</div>
+                            <div class="flashcard-text">${cardData.preCautions}</div>
+                        </div>
+                        <div class="flashcard-item">
+                            <div class="flashcard-label">Side Effects</div>
+                            <div class="flashcard-text">${cardData.sideEffects}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
-        function onPlayerReady(event) {
-            event.target.playVideo();
+        function showCard(index) {
+            const container = document.getElementById('flashcardContainer');
+            container.innerHTML = createFlashcardHTML(flashcardsData[index]);
+            document.getElementById('currentCard').textContent = index + 1;
         }
 
-        function onPlayerStateChange(event) {
-            // Add any additional event handling logic here
+        function nextCard() {
+            currentCardIndex = (currentCardIndex + 1) % flashcardsData.length;
+            showCard(currentCardIndex);
         }
 
-        // Load the YouTube API and create the player when it's ready
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        function previousCard() {
+            currentCardIndex = (currentCardIndex - 1 + flashcardsData.length) % flashcardsData.length;
+            showCard(currentCardIndex);
+        }
 
-        // Call the createYouTubePlayer function when the API is ready
-        window.onYouTubeIframeAPIReady = createYouTubePlayer;
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
             });
-        });
+            document.getElementById(sectionId).classList.add('active');
+            if (sectionId === 'flashcards') {
+                showCard(currentCardIndex);
+            }
+        }
+
+        // Initialize the first card when the page loads
+        window.onload = function() {
+            showCard(currentCardIndex);
+        };
     </script>
 </body>
 </html>
+
+
+
+
