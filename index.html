@@ -158,14 +158,16 @@
     <div class="nav-menu">
         <button class="nav-button" onclick="showSection('welcome')">Home</button>
         <button class="nav-button" onclick="showSection('flashcards')">Drug Cards</button>
-        <button class="nav-button" onclick="showSection('notes')">TSOP Practice</button>
+        <button class="nav-button" onclick="showSection('notes')">Bag Checlists</button>
         <button class="nav-button" onclick="showSection('practice')">The Moose is Loose</button>
+        <button class="nav-button" onclick="showSection('tsopPractice')">TSOP Practice</button>
     </div>
 
     <div id="welcome" class="content-section active">
         <div class="welcome-section">
             <h2>Study Material for Fire Academy</h2>
             <p>Choose a section above to begin studying!</p>
+            <p>Below are helpful links and files/documents</p>
             <p>Helpful links</p>
             <a href="https://www.phmsa.dot.gov/training/hazmat/erg/emergency-response-guidebook-erg">Emergency Response Guide</a>
             <p>Lung training stuff from O'Donoghue</p>
@@ -176,7 +178,8 @@
     </div>
 
     <div id="flashcards" class="content-section">
-        <h2>Flashcards</h2>
+        <h2>Drug Cards</h2>
+        <p>Use the arrows to navigate one at a time or use the drop down to select a specific drug</p>
         <div class="flashcard-counter">Card <span id="currentCard">1</span> of 15</div>
         <div class="flashcard-navigation">
             <button class="flashcard-nav-button" onclick="previousCard()">Previous</button>
@@ -203,15 +206,165 @@
     </div>
 
     <div id="notes" class="content-section">
-        <h2>TSOP Practice</h2>
-        <p>will add scenarios here later for practice</p>
+        <h2>Bag Checklist</h2>
+        <p>Use the buttons to switch between the different bags, refreshing the page or pressing Clear All should clear both list</p>
+        <div class="checklist-controls">
+            <button class="control-button" onclick="showChecklist('medical')">Medical Checklist</button>
+            <button class="control-button" onclick="showChecklist('trauma')">Trauma Checklist</button>
+            <button onclick="clearChecklist()" class="clear-button">Clear All</button>
+        </div>
+
+        <div id="medical-checklist" class="checklist active">
+            <h3>Jump Bag</h3>
+            <div class="checklist-items">
+                <label><input type="checkbox"> 1</label>
+                <label><input type="checkbox"> 2</label>
+                <label><input type="checkbox"> 3</label>
+                <label><input type="checkbox"> 4</label>
+                <label><input type="checkbox"> 5</label>
+                <label><input type="checkbox"> 6</label>
+                <label><input type="checkbox"> 7</label>
+                <label><input type="checkbox">8</label>
+                <label><input type="checkbox"> 9</label>
+                <label><input type="checkbox"> 10</label>
+                <label><input type="checkbox"> 11</label>
+                <label><input type="checkbox"> 12 </label>
+            </div>
+        </div>
+
+        <div id="trauma-checklist" class="checklist">
+            <h3>Trauma Bag</h3>
+            <div class="checklist-items">
+                <label><input type="checkbox"> 1</label>
+                <label><input type="checkbox"> 2</label>
+                <label><input type="checkbox"> 3</label>
+                <label><input type="checkbox"> 4</label>
+                <label><input type="checkbox"> 5</label>
+                <label><input type="checkbox"> 6</label>
+                <label><input type="checkbox"> 7</label>
+                <label><input type="checkbox"> 8</label>
+                <label><input type="checkbox"> 9</label>
+                <label><input type="checkbox">10</label>
+                <label><input type="checkbox">11</label>
+                <label><input type="checkbox"> 12</label>
+            </div>
+        </div>
+
+        <style>
+            .checklist {
+                display: none;
+                margin: 10px;
+                width: 100%;
+                max-width: 600px;
+            }
+            
+            .checklist.active {
+                display: block;
+            }
+
+            .checklist-items {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .checklist-items label {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                font-size: 16px;
+                min-height: 44px; /* Minimum touch target size */
+            }
+
+            .checklist-items input[type="checkbox"] {
+                width: 24px;
+                height: 24px;
+            }
+
+            .checklist-controls {
+                margin: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                width: 100%;
+                max-width: 600px;
+            }
+
+            .control-button, .clear-button {
+                flex: 1;
+                min-width: 120px;
+                padding: 12px;
+                font-size: 16px;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                text-align: center;
+            }
+
+            .control-button {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            .clear-button {
+                background-color: #ff4444;
+                color: white;
+            }
+
+            .control-button:hover {
+                background-color: #45a049;
+            }
+
+            .clear-button:hover {
+                background-color: #cc0000;
+            }
+
+            @media (max-width: 480px) {
+                .checklist-controls {
+                    flex-direction: column;
+                }
+
+                .control-button, .clear-button {
+                    width: 100%;
+                }
+
+                .checklist-items label {
+                    padding: 5px 0;
+                }
+
+                .checklist {
+                    margin: 5px;
+                }
+            }
+        </style>
+
+        <script>
+            function showChecklist(type) {
+                document.getElementById('medical-checklist').classList.remove('active');
+                document.getElementById('trauma-checklist').classList.remove('active');
+                document.getElementById(type + '-checklist').classList.add('active');
+            }
+
+            function clearChecklist() {
+                const checkboxes = document.querySelectorAll('.checklist-items input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            }
+        </script>
     </div>
 
     <div id="practice" class="content-section">
-        <h2>Practice Tests</h2>
+        <h2>The Moose is loose</h2>
         <div class="practice-content">
             <img src="themooseisloose.jpg" alt="Practice Test Image" class="practice-image">
         </div>
+    </div>
+
+    <div id="tsopPractice" class="content-section">
+        <h2>TSOP Practice Scenarios</h2>
+        <p>will add these later</p>
     </div>
 
     <script>
