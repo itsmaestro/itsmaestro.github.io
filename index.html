@@ -125,8 +125,8 @@
     <div class="nav-menu">
         <button class="nav-button" onclick="showSection('welcome')">Home</button>
         <button class="nav-button" onclick="showSection('flashcards')">Flashcards</button>
-        <button class="nav-button" onclick="showSection('notes')">Notes</button>
-        <button class="nav-button" onclick="showSection('practice')">Practice Tests</button>
+        <button class="nav-button" onclick="showSection('notes')">TSOP Practice</button>
+        <button class="nav-button" onclick="showSection('practice')">The Moose is Loose</button>
     </div>
 
     <div id="welcome" class="content-section active">
@@ -147,13 +147,15 @@
     </div>
 
     <div id="notes" class="content-section">
-        <h2>Notes</h2>
-        <!-- Notes content here -->
+        <h2>TSOP Practice</h2>
+        <p>will add scenarios here later for practice</p>
     </div>
 
     <div id="practice" class="content-section">
         <h2>Practice Tests</h2>
-        <!-- Practice tests content here -->
+        <div class="practice-content">
+            <img src="themooseisloose.jpg" alt="Practice Test Image" class="practice-image">
+        </div>
     </div>
 
     <script>
@@ -257,116 +259,116 @@
                 sideEffects: "Headaches, sleepiness, nose/throat dryness"
             },
             {
-                title: "Amoxicillin",
-                tradeName: "Amoxil",
-                genericName: "Amoxicillin",
-                class: "Penicillin Antibiotic",
-                route: "Oral",
-                dosage: "250-500mg TID",
-                moa: "Cell wall synthesis inhibition",
-                indications: "Bacterial infections",
-                contraindications: "Penicillin allergy",
-                desiredEffects: "Bacterial death",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Diarrhea, Rash"
+                title: "Nitroglycerin",
+                tradeName: "NitroStat, Nitro mist",
+                genericName: "Nitroglycerin",
+                class: "nitrates, angina",
+                route: "Sublingual",
+                dosage: "0.4 mg / 5 minutes (max 3x), No pediatrics",
+                moa: "Cuases Vasodilation",
+                indications: "Chest Pain of Cardiac Origin",
+                contraindications: "Recent use of ED meds, Hypotension, Head Injury",
+                desiredEffects: "Chest Pain Relief, increased blood flow to the heart",
+                preCautions: "low BP close to 100 systolic",
+                sideEffects: "Headache, hypotension, Nausea, flushed in the face"
             },
             {
-                title: "Hydrochlorothiazide",
-                tradeName: "Microzide",
-                genericName: "HCTZ",
-                class: "Thiazide Diuretic",
-                route: "Oral",
-                dosage: "12.5-50mg daily",
-                moa: "Increases water excretion",
-                indications: "Hypertension, Edema",
-                contraindications: "Sulfa allergy",
-                desiredEffects: "Reduced fluid retention",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Electrolyte imbalance"
+                title: "Benadryl",
+                tradeName: "Benadryl",
+                genericName: "Diphenhydramine",
+                class: "Anti-histamine",
+                route: "IV, IO, IM, PO",
+                dosage: "Adult=25-50 mg, Peds over 3 months=1 mg/kg",
+                moa: "Blocks Histamines, H1 receptor antagonist",
+                indications: "Allergic reactions with a patent airway",
+                contraindications: "Hypersensitivity, lower respatory tract disease, premature infants",
+                desiredEffects: "Reduce allergy sypmtoms",
+                preCautions: "Driving, operating heavy machinery",
+                sideEffects: "sleepiness, drymoth, throat"
             },
             {
-                title: "Levothyroxine",
-                tradeName: "Synthroid",
-                genericName: "Levothyroxine",
-                class: "Thyroid hormone",
-                route: "Oral",
-                dosage: "25-200mcg daily",
-                moa: "Thyroid hormone replacement",
-                indications: "Hypothyroidism",
-                contraindications: "Thyrotoxicosis",
-                desiredEffects: "Normal thyroid levels",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Palpitations, Insomnia"
+                title: "Epinephrine 1:1000",
+                tradeName: "Adrenalin",
+                genericName: "Epinephrine",
+                class: "Sympathominetic",
+                route: "Intramuscular",
+                dosage: "Adult = 0.3-0.5 mg, Peds=0.01 mg/kg",
+                moa: "Acts on Alpha Receptors to contract blood vessels and Beta 2 receptors",
+                indications: "Anaphylaxsis",
+                contraindications: "Arrythmias, severe hypertension, none for life threatening situations",
+                desiredEffects: "Vaso constriction and bronchodilation",
+                preCautions: "cardiovascular disease, hyperthyroidism, pregnancy, diabetes",
+                sideEffects: "Tachycardia, Arythmia, Pulmonary Edema"
             },
             {
-                title: "Gabapentin",
-                tradeName: "Neurontin",
-                genericName: "Gabapentin",
-                class: "Anticonvulsant",
-                route: "Oral",
-                dosage: "300-3600mg daily",
-                moa: "GABA analog",
-                indications: "Neuropathic pain, Epilepsy",
-                contraindications: "Severe renal impairment",
-                desiredEffects: "Pain relief",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Dizziness, Drowsiness"
+                title: "Tylenol",
+                tradeName: "Tylenol",
+                genericName: "Acetaminophen",
+                class: "Analgesics",
+                route: "Oral, rectal for neonates",
+                dosage: "Adults=500-1000 mg, Peds=15 mg/kg",
+                moa: "Binds to receptors in the body",
+                indications: "fever and pain control",
+                contraindications: "Hypersensitivity, liver disease, kidney disease",
+                desiredEffects: "Relief for mild pain or fever, headache, muscle ache",
+                preCautions: "allergic reaction",
+                sideEffects: "Nausea Fatigue"
             },
             {
-                title: "Warfarin",
-                tradeName: "Coumadin",
-                genericName: "Warfarin",
-                class: "Anticoagulant",
-                route: "Oral",
-                dosage: "2-10mg daily",
-                moa: "Vitamin K antagonist",
-                indications: "Blood clot prevention",
-                contraindications: "Active bleeding",
-                desiredEffects: "Prevent blood clots",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Bleeding, Bruising"
-            },
-            {
-                title: "Furosemide",
-                tradeName: "Lasix",
-                genericName: "Furosemide",
-                class: "Loop Diuretic",
-                route: "Oral/IV",
-                dosage: "20-80mg daily",
-                moa: "Inhibits Na-K-Cl cotransport",
-                indications: "Edema, Heart failure",
-                contraindications: "Anuria",
-                desiredEffects: "Increased urine output",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Dehydration, Electrolyte imbalance"
-            },
-            {
-                title: "Amlodipine",
-                tradeName: "Norvasc",
-                genericName: "Amlodipine",
-                class: "Calcium Channel Blocker",
-                route: "Oral",
-                dosage: "2.5-10mg daily",
-                moa: "Blocks calcium channels",
-                indications: "Hypertension, Angina",
-                contraindications: "Cardiogenic shock",
-                desiredEffects: "Lower blood pressure",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Edema, Headache"
-            },
-            {
-                title: "Pantoprazole",
-                tradeName: "Protonix",
-                genericName: "Pantoprazole",
-                class: "Proton Pump Inhibitor",
-                route: "Oral/IV",
-                dosage: "40mg daily",
-                moa: "Reduces acid production",
-                indications: "GERD, Ulcers",
+                title: "Narcan",
+                tradeName: "Narcan",
+                genericName: "Naloxone",
+                class: "Opiod Antagonist",
+                route: "Intranasal",
+                dosage: "Adult=0.4-2 mg, Peds=0.1 mg/kg",
+                moa: "Binds to opioid receptors, reversing effects of overdose",
+                indications: "Narcotic Antagonist, Opioid overdose, pinpoint pupils",
                 contraindications: "Hypersensitivity",
-                desiredEffects: "Reduced acid production",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Headache, Diarrhea"
+                desiredEffects: "Restore normal respitory rate",
+                preCautions: "Withdrawal symptoms, potential for a turn to respitory depression",
+                sideEffects: "Headache, sweating, seizures, Nausea, Tachycardia"
+            },
+            {
+                title: "Afrin",
+                tradeName: "Afrin, Clearquil",
+                genericName: "Oxymetzoline",
+                class: "Decongestant",
+                route: "Intranasal",
+                dosage: "2-3 sprays every 10-12 hours",
+                moa: "Alpha-adrenergic agonist stimulates receptors and produces vaso-constriction in arterioles of nasal mucosa",
+                indications: "Epistaxis",
+                contraindications: "Hypersensitivity",
+                desiredEffects: "relieve/stop epistaxis",
+                preCautions: "allergies, high BP, Diabetes",
+                sideEffects: "Burning, stinging, dryness, runny nose"
+            },
+            {
+                title: "Ibuprofen",
+                tradeName: "Advil, Motrin",
+                genericName: "Ibuprofin",
+                class: "NSAID",
+                route: "Oral",
+                dosage: "Adult=400-800 mg, Peds=10 mg/kg",
+                moa: "Non-selective reversible inhibition cox 1-2 enzymes",
+                indications: "fever, pain",
+                contraindications: "Allergy, GI bleed, renal failure, anti-coagulant, prescription use",
+                desiredEffects: "fever reduction, pain relief",
+                preCautions: "pregnancy, long term use can cause renal failure",
+                sideEffects: "Nausea, vomiting, headache, upset stomach"
+            },
+            {
+                title: "Atropine/Prolidoxime (2 PAM auto)",
+                tradeName: "2-PAM, Protopam",
+                genericName: "Prolidoxime",
+                class: "oxime",
+                route: "Intramuscular",
+                dosage: "1 auto injector (A,P)",
+                moa: "Used to reactivate acetycholinesterase by promoting dephosphorylatium",
+                indications: "Antidote for nerve agents or organophosphate overdose",
+                contraindications: "none",
+                desiredEffects: "Reverse nerve agents/ organophosphate overdose",
+                preCautions: "Patients with known cardiovascular disease",
+                sideEffects: "Pain, blurred vision, dizziness, drowsiness, headaches"
             }
         ];
 
