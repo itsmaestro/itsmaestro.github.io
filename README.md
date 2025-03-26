@@ -1,8 +1,10 @@
 ### Portfolio Website
 ## Todo
-1. HTML file
-2. CSS file
-3. JS file
+1. Add a functional bag checklist for trauma and jump bags
+2. Get some TSOPS from MB and start adding them via example format
+3. Useful links section
+4. Document Archive
 
-
-Doesn't need to be fancy, just a place to showcase some projects that is presentable.
+## Later Aditions
+1. Split EMS stuff with fire stuff
+2. Flickr section for class photos?
