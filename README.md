@@ -4,7 +4,8 @@
          - done but need to add the actual files to the front page/need to get from an instructor
 3. Get some TSOPS from MB and start adding them via example format
 4. Useful links section
-5. Document Archive
+         - done/ Mardones said he had some links to send me so I will add those later
+6. Document Archive
 
 ## Later Aditions
 1. Split EMS stuff with fire stuff
