@@ -1,805 +1,365 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academy 55</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .nav-menu {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap; /* Allow buttons to wrap on mobile */
-        }
-
-        .nav-button {
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-            cursor: pointer;
-            border: none;
-            width: 100%; /* Full width on mobile */
-            max-width: 200px; /* Max width for larger screens */
-        }
-
-        .nav-button:hover {
-            background: #0056b3;
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .flashcard-section {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .flashcard-title {
-            font-size: 1.3em;
-            color: #007bff;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 5px;
-        }
-
-        .flashcard-content {
-            display: grid;
-            grid-template-columns: 1fr; /* Single column on mobile */
-            gap: 15px;
-        }
-
-        @media (min-width: 768px) {
-            .flashcard-content {
-                grid-template-columns: repeat(2, 1fr); /* Two columns on larger screens */
-            }
-            
-            .nav-button {
-                width: auto; /* Auto width on larger screens */
-            }
-        }
-
-        .flashcard-item {
-            background: white;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .flashcard-label {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-            font-size: 0.9em; /* Slightly smaller on mobile */
-        }
-
-        .flashcard-navigation {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap; /* Allow buttons to wrap if needed */
-        }
-
-        .flashcard-nav-button {
-            padding: 10px 20px; /* Larger touch target for mobile */
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 45%; /* Almost half width for better mobile tapping */
-            max-width: 150px;
-        }
-
-        .flashcard-counter {
-            text-align: center;
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        /* Additional mobile optimizations */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .header h1 {
-                font-size: 1.5em;
-            }
-
-            .flashcard-title {
-                font-size: 1.2em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Street Name Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    #map {
+      flex: 1 1 60%;
+      min-height: 300px;
+    }
+    #quiz {
+      flex: 1 1 40%;
+      padding: 16px;
+      background: #f9f9f9;
+      overflow-y: auto;
+    }
+    .street-question {
+      margin-bottom: 12px;
+    }
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+    .incorrect {
+      color: red;
+      font-weight: bold;
+    }
+    #start-quiz-btn, #reset-btn {
+      margin: 8px 0;
+      padding: 8px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #instructions {
+      margin-bottom: 12px;
+      color: #333;
+    }
+    .quiz-marker {
+      background: #1976d2;
+      color: #fff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+  </style>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-    <div class="header">
-        <h1>Study Materials</h1>
+  <div id="app">
+    <div id="map"></div>
+    <div id="quiz">
+      <div id="instructions">
+        <b>Instructions:</b> <br>
+        1. Pan and zoom the map to your desired area.<br>
+        2. Click "Start Quiz" to load visible street names.<br>
+        3. Fill in the street names as a quiz.<br>
+      </div>
+      <button id="start-quiz-btn">Start Quiz</button>
+      <button id="reset-btn" style="display:none;">Reset</button>
+      <form id="quiz-form" style="display:none;"></form>
+      <div id="results"></div>
     </div>
+  </div>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Helper: fetch street names using Overpass API
+    async function fetchStreetNames(bounds) {
+      // bounds: Leaflet LatLngBounds
+      const sw = bounds.getSouthWest();
+      const ne = bounds.getNorthEast();
+      
+      console.log("Fetching streets for bounds:", sw, ne);
+      
+      // Sample Raleigh street data with coordinates covering all of Raleigh
+      const allSampleStreets = [
+        // Downtown Raleigh
+        { name: "Fayetteville St", lat: 35.7796, lng: -78.6382 },
+        { name: "Hillsborough St", lat: 35.7844, lng: -78.6581 },
+        { name: "Glenwood Ave", lat: 35.7891, lng: -78.6478 },
+        { name: "Blount St", lat: 35.7778, lng: -78.6401 },
+        { name: "Person St", lat: 35.7856, lng: -78.6334 },
+        { name: "Dawson St", lat: 35.7789, lng: -78.6412 },
+        { name: "Wilmington St", lat: 35.7801, lng: -78.6367 },
+        { name: "Salisbury St", lat: 35.7791, lng: -78.6395 },
+        { name: "Hargett St", lat: 35.7781, lng: -78.6389 },
+        { name: "Martin St", lat: 35.7771, lng: -78.6405 },
+        { name: "Edenton St", lat: 35.7761, lng: -78.6395 },
+        { name: "Jones St", lat: 35.7751, lng: -78.6401 },
+        { name: "Lenoir St", lat: 35.7741, lng: -78.6411 },
+        { name: "Morgan St", lat: 35.7731, lng: -78.6421 },
+        { name: "South St", lat: 35.7721, lng: -78.6431 },
+        { name: "Capitol Blvd", lat: 35.7806, lng: -78.6392 },
+        { name: "McDowell St", lat: 35.7816, lng: -78.6402 },
+        { name: "Harrington St", lat: 35.7826, lng: -78.6412 },
+        { name: "Bloodworth St", lat: 35.7836, lng: -78.6422 },
+        { name: "East St", lat: 35.7846, lng: -78.6432 },
+        
+        // North Raleigh
+        { name: "Six Forks Rd", lat: 35.8500, lng: -78.6500 },
+        { name: "Falls of Neuse Rd", lat: 35.8600, lng: -78.6400 },
+        { name: "Creedmoor Rd", lat: 35.8400, lng: -78.6600 },
+        { name: "Glenwood Ave", lat: 35.8200, lng: -78.6800 },
+        { name: "Lead Mine Rd", lat: 35.8300, lng: -78.6700 },
+        { name: "Strickland Rd", lat: 35.8700, lng: -78.6300 },
+        { name: "Spring Forest Rd", lat: 35.8800, lng: -78.6200 },
+        { name: "Lynn Rd", lat: 35.8500, lng: -78.6800 },
+        { name: "Sawmill Rd", lat: 35.8400, lng: -78.6900 },
+        { name: "Durant Rd", lat: 35.8900, lng: -78.6100 },
+        
+        // South Raleigh
+        { name: "South Saunders St", lat: 35.7500, lng: -78.6400 },
+        { name: "Wilmington St", lat: 35.7600, lng: -78.6500 },
+        { name: "New Bern Ave", lat: 35.7700, lng: -78.6200 },
+        { name: "Lake Wheeler Rd", lat: 35.7200, lng: -78.6600 },
+        { name: "Tryon Rd", lat: 35.7400, lng: -78.6800 },
+        { name: "Rocky Mount Rd", lat: 35.7300, lng: -78.7000 },
+        { name: "Ten Ten Rd", lat: 35.7100, lng: -78.7200 },
+        { name: "Buffaloe Rd", lat: 35.7500, lng: -78.7200 },
+        { name: "Jones Sausage Rd", lat: 35.7400, lng: -78.7400 },
+        { name: "Sunnybrook Rd", lat: 35.7600, lng: -78.7600 },
+        
+        // East Raleigh
+        { name: "New Hope Rd", lat: 35.7800, lng: -78.5800 },
+        { name: "Buffalo Rd", lat: 35.7900, lng: -78.5600 },
+        { name: "Hodge Rd", lat: 35.8000, lng: -78.5400 },
+        { name: "Forestville Rd", lat: 35.8100, lng: -78.5200 },
+        { name: "Miami Blvd", lat: 35.8200, lng: -78.5000 },
+        { name: "Brentwood Rd", lat: 35.7700, lng: -78.6000 },
+        { name: "Trawick Rd", lat: 35.7600, lng: -78.5800 },
+        { name: "Rogers Ln", lat: 35.7500, lng: -78.5600 },
+        { name: "Poole Rd", lat: 35.7400, lng: -78.5400 },
+        { name: "Hammond Rd", lat: 35.7300, lng: -78.5200 },
+        
+        // West Raleigh
+        { name: "Western Blvd", lat: 35.7800, lng: -78.7000 },
+        { name: "Avent Ferry Rd", lat: 35.7900, lng: -78.7200 },
+        { name: "Gorman St", lat: 35.8000, lng: -78.7400 },
+        { name: "Blue Ridge Rd", lat: 35.8100, lng: -78.7600 },
+        { name: "Durham Rd", lat: 35.8200, lng: -78.7800 },
+        { name: "Beryl Rd", lat: 35.7700, lng: -78.7200 },
+        { name: "Avent Ferry Rd", lat: 35.7600, lng: -78.7400 },
+        { name: "Method Rd", lat: 35.7500, lng: -78.7600 },
+        { name: "Pullen Rd", lat: 35.7400, lng: -78.7800 },
+        { name: "Dan Allen Dr", lat: 35.7300, lng: -78.8000 },
+        
+        // Northwest Raleigh
+        { name: "Brier Creek Pkwy", lat: 35.9000, lng: -78.7800 },
+        { name: "Leesville Rd", lat: 35.8800, lng: -78.7600 },
+        { name: "Norwood Rd", lat: 35.8600, lng: -78.7400 },
+        { name: "Litchford Rd", lat: 35.8400, lng: -78.7200 },
+        { name: "Millbrook Rd", lat: 35.8200, lng: -78.7000 },
+        { name: "Atlantic Ave", lat: 35.8000, lng: -78.6800 },
+        { name: "Wake Forest Rd", lat: 35.7800, lng: -78.6600 },
+        { name: "Capital Blvd", lat: 35.7600, lng: -78.6400 },
+        { name: "Raleigh Blvd", lat: 35.7400, lng: -78.6200 },
+        { name: "New Hope Church Rd", lat: 35.7200, lng: -78.6000 },
+        
+        // Southeast Raleigh
+        { name: "Rock Quarry Rd", lat: 35.7000, lng: -78.6000 },
+        { name: "Martin Luther King Jr Blvd", lat: 35.7200, lng: -78.5800 },
+        { name: "Hammond Rd", lat: 35.7400, lng: -78.5600 },
+        { name: "Buffalo Rd", lat: 35.7600, lng: -78.5400 },
+        { name: "New Hope Rd", lat: 35.7800, lng: -78.5200 },
+        { name: "Hodge Rd", lat: 35.8000, lng: -78.5000 },
+        { name: "Forestville Rd", lat: 35.8200, lng: -78.4800 },
+        { name: "Miami Blvd", lat: 35.8400, lng: -78.4600 },
+        { name: "Brentwood Rd", lat: 35.8600, lng: -78.4400 },
+        { name: "Trawick Rd", lat: 35.8800, lng: -78.4200 }
+      ];
+      
+      // Filter streets that are within the current map bounds
+      const visibleStreets = allSampleStreets.filter(street => {
+        return street.lat >= sw.lat && street.lat <= ne.lat && 
+               street.lng >= sw.lng && street.lng <= ne.lng;
+      });
+      
+      console.log(`Found ${visibleStreets.length} streets in current view out of ${allSampleStreets.length} total`);
+      console.log("Visible streets:", visibleStreets.map(s => s.name));
+      
+      return visibleStreets;
+    }
 
-    <div class="nav-menu">
-        <button class="nav-button" onclick="showSection('welcome')">Home</button>
-        <button class="nav-button" onclick="showSection('flashcards')">Drug Cards</button>
-        <button class="nav-button" onclick="showSection('notes')">Bag Checklists</button>
-        <button class="nav-button" onclick="showSection('practice')">The Moose is Loose</button>
-        <button class="nav-button" onclick="showSection('tsopPractice')">TSOP Practice</button>
-        <button class="nav-button" onclick="showSection('tsopScript')">TSOP Script</button>
-    </div>
+    let map;
+    let quizStreets = [];
+    let markers = [];
+    let quizStarted = false;
+    let originalTileLayer;
 
-    <div id="welcome" class="content-section active">
-        <div class="welcome-section">
-            <h2>Study Material for Fire Academy</h2>
-            <h2>April 12th, 9:00 AM til finished at Raleigh Campus</h2>
-            <p>Choose a section above to begin studying!</p>
-            <p>Below are helpful links and files/documents</p>
-            <h2>Helpful links</h2>
-            <a href="https://www.phmsa.dot.gov/training/hazmat/erg/emergency-response-guidebook-erg">Emergency Response Guide</a>
-            <p>Lung training stuff from O'Donoghue</p>
-            <a href="https://play.google.com/store/apps/details?id=com.brucemax.freediveapneatimer&hl=en_US">Google Play Store Link</a>
-            <a href="https://apps.apple.com/au/app/freediving-apnea-trainer/id1216253186">Apple Store Link</a>
-            <h2>Useful Files</h2>
-        </div>
-    </div>
+    function clearMarkers() {
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+    }
 
-    <div id="flashcards" class="content-section">
-        <h2>Drug Cards</h2>
-        <p>Use the arrows to navigate one at a time or use the drop down to select a specific drug Hypoglycemia = bgl less than 69</p>
-        <div class="flashcard-counter">Card <span id="currentCard">1</span> of 15</div>
-        <div class="flashcard-navigation">
-            <button class="flashcard-nav-button" onclick="previousCard()">Previous</button>
-            <select id="cardSelect" onchange="selectCard(this.value)">
-                <option value="0">Calcium Gluconate (Topical)</option>
-                <option value="1">Aspirin</option>
-                <option value="2">Oral Glucose</option>
-                <option value="3">Glucagon</option>
-                <option value="4">Activated Charcoal</option>
-                <option value="5">Albuterol</option>
-                <option value="6">Oxygen</option>
-                <option value="7">Nitroglycerin</option>
-                <option value="8">Benadryl</option>
-                <option value="9">Epinephrine 1:1000</option>
-                <option value="10">Tylenol</option>
-                <option value="11">Narcan</option>
-                <option value="12">Afrin</option>
-                <option value="13">Ibuprofen</option>
-                <option value="14">Atropine/Prolidoxime (2 PAM auto)</option>
-            </select>
-            <button class="flashcard-nav-button" onclick="nextCard()">Next</button>
-        </div>
-        <div id="flashcardContainer"></div>
-    </div>
+    function showMarkersForQuiz(streets) {
+      clearMarkers();
+      streets.forEach((street, idx) => {
+        const marker = L.marker([street.lat, street.lng], {
+          icon: L.divIcon({
+            className: 'quiz-marker',
+            html: String(idx + 1),
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+          })
+        }).addTo(map);
+        markers.push(marker);
+      });
+    }
 
-    <div id="notes" class="content-section">
-        <h2>Bag Checklist</h2>
-        <p>Use the buttons to switch between the different bags, refreshing the page or pressing Clear All should clear both list</p>
-        <div class="checklist-controls">
-            <button class="control-button" onclick="showChecklist('medical')">Medical Checklist</button>
-            <button class="control-button" onclick="showChecklist('trauma')">Trauma Checklist</button>
-            <button onclick="clearChecklist()" class="clear-button">Clear All</button>
-        </div>
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
 
-        <div id="medical-checklist" class="checklist active">
-            <h3>Jump Bag</h3>
-            <div class="checklist-items">
-                <label><input type="checkbox">Large BP Cuff (1)</label>
-                <label><input type="checkbox">Small BP Cuff (1)</label>
-                <label><input type="checkbox">AB Pad (1)</label>
-                <label><input type="checkbox">4" Cling (1)</label>
-                <label><input type="checkbox">4x4's (5)</label>
-                <label><input type="checkbox">Bio-hazard Bags (5)</label>
-                <label><input type="checkbox">Spare Glvoes (4 pairs)</label>
-                <label><input type="checkbox">Emesis Bags (5)</label>
-                <label><input type="checkbox">Patient Isolation Marks (3)</label>
-                <label><input type="checkbox">Trauma Shears (1)</label>
-                <label><input type="checkbox">Adult NRB (1)</label>
-                <label><input type="checkbox">Adult NC (1)</label>
-                <label><input type="checkbox">Nebulizer w/ Face Mask (1)</label>
-                <label><input type="checkbox">Ped NRB (1)</label>
-                <label><input type="checkbox">Ped NC (1)</label>
-                <label><input type="checkbox">Nebulizer w/ Face Mask (1)</label>
-                <label><input type="checkbox">OPA 40 mm (pink)(1)</label>
-                <label><input type="checkbox">OPA 50 mm (Light Green)(1)</label>
-                <label><input type="checkbox">OPA 60 mm (Black)(1)</label>
-                <label><input type="checkbox">OPA 70 mm (White)(1)</label>
-                <label><input type="checkbox">OPA 80 mm (Dark Green)(1)</label>
-                <label><input type="checkbox">OPA 90 mm (Yellow)(1)</label>
-                <label><input type="checkbox">OPA 100 mm (Purple)(1)</label>
-                <label><input type="checkbox">OPA 110 mm (Orange)(1)</label>
-                <label><input type="checkbox">NPA 22F (1)</label>
-                <label><input type="checkbox">NPA 24F (1)</label>
-                <label><input type="checkbox">NPA 26F (1)</label>
-                <label><input type="checkbox">NPA 28F (1)</label>
-                <label><input type="checkbox">NPA 30F (1)</label>
-                <label><input type="checkbox">NPA 32F (1)</label>
-                <label><input type="checkbox">Lubricating Jelly (5)</label>
-                <label><input type="checkbox">Patient Info Book (1)</label>
-                <label><input type="checkbox">Shaving Razor (1)</label>
-                <label><input type="checkbox">Stop Watch (1)</label>
-                <label><input type="checkbox">Adult BVM w/Mask (1)</label>
-                <label><input type="checkbox">Ped BVM w/Mask (1)</label>
-                <label><input type="checkbox">Neonate BVM Mask (1)</label>
-                <label><input type="checkbox">CPAP Kit (1)</label>
-                <label><input type="checkbox">CPAP Viral Filter (1)</label>
-                <label><input type="checkbox">Sharps Container (1)</label>
-                <label><input type="checkbox">12-Lead Kit (4&6 Lead) w/ Electrodes</label>
-                <label><input type="checkbox">Stethoscope (1)</label>
-                <label><input type="checkbox">Regular Adult BP Cuff (1)</label>
-                <label><input type="checkbox">Thermometer (1)</label>
-                <label><input type="checkbox">Glucometer (1)</label>
-                <label><input type="checkbox">Control Tests On Sunday</label>
-                <label><input type="checkbox">Test Solution (1)</label>
-                <label><input type="checkbox">Test Strips Bottle (1)</label>
-                <label><input type="checkbox">Lancets (5)</label>
-                <label><input type="checkbox">2x2's (5)</label>
-                <label><input type="checkbox">Alchohol Prep Pads (5)</label>
-                <label><input type="checkbox">Nail Polish Pads (5)</label>
-                <label><input type="checkbox">Pulse OX (Eng/Res/Sqd)</label>
-                <label><input type="checkbox">Adult Finger Probe (1)</label>
-                <label><input type="checkbox">Disp Pedi Finger Probe (1)</label>
-                <label><input type="checkbox">Rad 57 (Ladder)</label>
-                <label><input type="checkbox">Adult Finger Probe (1)</label>
-                <label><input type="checkbox">Pedi Finger Probe (1)</label>
-                <label><input type="checkbox">Quick Reference Guide (1)</label>
-                <label><input type="checkbox">Drug Box (1)</label>
-                <label><input type="checkbox">Epi-Kit (1)</label>
-                <label><input type="checkbox">Narcan (1)</label>
-                <label><input type="checkbox">Atomizers (1)</label>
-                <label><input type="checkbox">Aspirin (1)</label>
-                <label><input type="checkbox">Albuterol (6)</label>
-                <label><input type="checkbox">Oral Glucose (2)</label>
-                <label><input type="checkbox">Ammonia Inhalants (5)</label>
-                <label><input type="checkbox">Bee Sting Relief (5)</label>
-                <label><input type="checkbox">Pen Lights (2)</label>
-            </div>
-        </div>
+    function startQuiz(streets) {
+      quizStarted = true;
+      document.getElementById('start-quiz-btn').style.display = 'none';
+      document.getElementById('reset-btn').style.display = '';
+      document.getElementById('quiz-form').style.display = '';
+      document.getElementById('results').innerHTML = '';
+      
+      // Switch to a tile layer without street names
+      map.removeLayer(originalTileLayer);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd'
+      }).addTo(map);
+      
+      // Shuffle and limit to 8 streets for quiz
+      shuffleArray(streets);
+      quizStreets = streets.slice(0, 8);
+      showMarkersForQuiz(quizStreets);
 
-        <div id="trauma-checklist" class="checklist">
-            <h3>Trauma Bag</h3>
-            <div class="checklist-items">
-                <label><input type="checkbox">Triage Tags (25)</label>
-                <label><input type="checkbox">OB Kit (1)</label>
-                <label><input type="checkbox">Stethoscope (1)</label>
-                <label><input type="checkbox">Regular Adult BP Cuff (1)</label>
-                <label><input type="checkbox">Trauma Shears (1)</label>
-                <label><input type="checkbox">Pen Light (1)</label>
-                <label><input type="checkbox">Patient Information Booklet (1)</label>
-                <label><input type="checkbox">Ring Cutter (1)</label>
-                <label><input type="checkbox">Tourniquet (2)</label>
-                <label><input type="checkbox">Spare Gloves (4 pair)</label>
-                <label><input type="checkbox">Hand Sanitizer (1)</label>
-                <label><input type="checkbox">Cold Packs (2)</label>
-                <label><input type="checkbox">Eye Flush (1)</label>
-                <label><input type="checkbox">Sterile Water 250ml (1)</label>
-                <label><input type="checkbox">2x2's (10)</label>
-                <label><input type="checkbox">4x4's (10)</label>
-                <label><input type="checkbox">AB Pads (4)</label>
-                <label><input type="checkbox">Occlusive Dressing (2)</label>
-                <label><input type="checkbox">Band-Aids (10)</label>
-                <label><input type="checkbox">Triangle Bandages (10)</label>
-                <label><input type="checkbox">Tape 2" (1)</label>
-                <label><input type="checkbox">4" Ace Bandage (2)</label>
-                <label><input type="checkbox">4" Cling (4)</label>
-                <label><input type="checkbox">Adult BVM w/ Mask (1)</label>
-                <label><input type="checkbox">NPA 28F (1)</label>
-                <label><input type="checkbox">Lubricating Jelly (2)</label>
-                <label><input type="checkbox">OPA 40 mm (1)</label>
-                <label><input type="checkbox">OPA 50 mm (1)</label>
-                <label><input type="checkbox">OPA 70 mm (1)</label>
-                <label><input type="checkbox">OPA 80 mm (1)</label>
-                <label><input type="checkbox">OPA 90 mm (1)</label>
-                <label><input type="checkbox">OPA 100 mm (1)</label>
-                <label><input type="checkbox">OPA 110 mm (1)</label>
-                <label><input type="checkbox">Isolation Gowns (3)</label>
-                <label><input type="checkbox">Surgical Masks (3)</label>
-                <label><input type="checkbox">Safety Glasses (2)</label>
-                <label><input type="checkbox">Burn Sheet 15"x20" (1)</label>
-            </div>
-        </div>
+      // Build quiz form
+      const form = document.getElementById('quiz-form');
+      form.innerHTML = '';
+      quizStreets.forEach((street, idx) => {
+        const div = document.createElement('div');
+        div.className = 'street-question';
+        div.innerHTML = `
+          <label>
+            <b>Street #${idx + 1}:</b>
+            <input type="text" name="street${idx}" autocomplete="off" required>
+          </label>
+        `;
+        form.appendChild(div);
+      });
+      const submitBtn = document.createElement('button');
+      submitBtn.type = 'submit';
+      submitBtn.textContent = 'Submit Answers';
+      submitBtn.style.marginTop = '12px';
+      form.appendChild(submitBtn);
+    }
 
-        <style>
-            .checklist {
-                display: none;
-                margin: 10px;
-                width: 100%;
-                max-width: 600px;
-            }
-            
-            .checklist.active {
-                display: block;
-            }
-
-            .checklist-items {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
-            }
-
-            .checklist-items label {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                font-size: 16px;
-                min-height: 44px; /* Minimum touch target size */
-            }
-
-            .checklist-items input[type="checkbox"] {
-                width: 24px;
-                height: 24px;
-            }
-
-            .checklist-controls {
-                margin: 10px;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                width: 100%;
-                max-width: 600px;
-            }
-
-            .control-button, .clear-button {
-                flex: 1;
-                min-width: 120px;
-                padding: 12px;
-                font-size: 16px;
-                border-radius: 8px;
-                border: none;
-                cursor: pointer;
-                text-align: center;
-            }
-
-            .control-button {
-                background-color: #4CAF50;
-                color: white;
-            }
-
-            .clear-button {
-                background-color: #ff4444;
-                color: white;
-            }
-
-            .control-button:hover {
-                background-color: #45a049;
-            }
-
-            .clear-button:hover {
-                background-color: #cc0000;
-            }
-
-            @media (max-width: 480px) {
-                .checklist-controls {
-                    flex-direction: column;
-                }
-
-                .control-button, .clear-button {
-                    width: 100%;
-                }
-
-                .checklist-items label {
-                    padding: 5px 0;
-                }
-
-                .checklist {
-                    margin: 5px;
-                }
-            }
-        </style>
-
-        <script>
-            function showChecklist(type) {
-                document.getElementById('medical-checklist').classList.remove('active');
-                document.getElementById('trauma-checklist').classList.remove('active');
-                document.getElementById(type + '-checklist').classList.add('active');
-            }
-
-            function clearChecklist() {
-                const checkboxes = document.querySelectorAll('.checklist-items input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-            }
-        </script>
-    </div>
-
-    <div id="practice" class="content-section">
-        <h2>The Moose is loose</h2>
-        <div class="practice-content">
-            <img src="themooseisloose.jpg" alt="Practice Test Image" class="practice-image">
-        </div>
-    </div>
-
-    <div id="tsopPractice" class="content-section">
-        <h2>TSOP Practice Scenarios</h2>
-        <p>will add these later</p>
-    </div>
-
-    <div id="tsopScript" class="content-section">
-        <h2>The Six Cores of TSOP's</h2>
-        <ul>
-            <li>BSI/PPE</li>
-            <li>Scene Safety</li>
-            <li>Number of Patients</li>
-            <li>MOI/NOI</li>
-            <li>Additional Resources</li>
-            <li>C-Spine Considerations</li>
-        </ul>
-        <h2>Example Script for TSOPs</h2>
-        <p>yurt skurt herd ma gurt</p>
-        <ol>
-            <li>Establish BSI and Scene Safety</li>
-            <li>Make an initial MOI/NOI (Declare what you're leaning toward, may not declare one at all)</li>
-            <li>Determine Number of Patients</li>
-            <li>Request ALS/additional resources - Stable/Unstable, not a transport decision</li>
-            <li>Consider C-Spine/Establish C-Spine Control</li>
-            <li>Approach the scene and ask questions you would be looking for to form a general impression</li>
-            <ul><li>ie. skin color, LOC, AxOx4 sweating, clammy, respitory rate, AVPU, checking for skin condition expose where needed</li></ul>
-            <li>Observe Airway and Breathing-make sure they have a patent airway-check for rate, rhythm, quality</li>
-            <li>Assess Circulation-assess and control any major bleeding, assess skin-skin color, temp, or condition, assess pulse-rate, quality, normal/abnormal</li>
-            <li>check for priority patients/make a transport decision---Make sure you verbalize</li>
-            <li>History OPQRST and SAMPLE - gain whatever knowledge you can so you can properly treat and give good information to ALS</li>
-            <li>Secondary Assessment - assess affected body parts and systems or complete a rapid assessment</li>
-            <li>Vitals-Pulse, Respitory Rate and Quality, Blood Pressure, AVPU, PEARL, SPo2, Blood Glucose, Lung Sounds, Skin Condition</li>
-            <li>Establish Diagnostics EKG for cardiac problems</li>
-            <li>State a field impresion</li>
-            <li>Verbalize a treatment plan and call for appropriate interventions</li>
-            <li>Reconsider Transport based on patient condition</li>
-            <li>Redo primary Survey</li>
-            <li>new set of vitals</li>
-            <li>checking for response to treatments, improvement, changes to vitals</li>
-            <li>Repeat secondary assessment based off patients complaints or injuries new and old</li>
-        </ol>
-    </div>
-
-    <script>
-        const flashcardsData = [
-            {
-                title: "Calcium Gluconate (Topical)",
-                tradeName: "Kalcinate",
-                genericName: "Calcium Gluconate",
-                class: "Mineral/Electrolyte",
-                route: "Topical Ointment",
-                dosage: "2.5% Calcium Gluconate, use as needed",
-                moa: "Binds to fluoride ions released by HF Acid forming insoluable calcium flouride",
-                indications: "Hydrofluoric Acid Burn",
-                contraindications: "Hypersensitivity",
-                desiredEffects: "Neutralize Burn",
-                preCautions: "Don't get in eyes or mouth",
-                sideEffects: "Allergic Reaction, Hypersensitivity"
-            },
-            {
-                title: "Aspirin",
-                tradeName: "Bayer",
-                genericName: "Aspirin",
-                class: "NSAID",
-                route: "Oral",
-                dosage: "4x81mg Tablets, No Peds Dose",
-                moa: "Anti-inflammatory, prevents platelets from clumping, inhibits platelet aggregation (blood slickener)",
-                indications: "Cardiac Chest Pain",
-                contraindications: "Hypersensitivity, Recent GI bleeding, Hemophilia",
-                desiredEffects: "prevent the clot from worsening, reduce chest pain",
-                preCautions: "Pain caused by trauma, use in pediatrics",
-                sideEffects: "Nausea, vomiting, bleeding, upset stomach, allergic reactions"
-            },
-            {
-                title: "Oral Glucose",
-                tradeName: "Glutose",
-                genericName: "Oral Glucose",
-                class: "Glucose Elevating Agent",
-                route: "Oral",
-                dosage: "15g / tube both A + P",
-                moa: "Increases blood glucose levels by stimulating insulin secretion and being absorbed into blood stream",
-                indications: "Hypoglycemia < 69 mg/dl, decreased LOC",
-                contraindications: "Unconcious patients, cannot swallow/can't protect own airway",
-                desiredEffects: "Raises blood glucose levels",
-                preCautions: "insure patent airway",
-                sideEffects: "risk of aspiration"
-            },
-            {
-                title: "Glucagon",
-                tradeName: "GlucaGen",
-                genericName: "glucagon",
-                class: "glycogenolytic agent",
-                route: "Intramuscular",
-                dosage: "Adult= 1-2 mg, Peds= 0.1 mg/kg",
-                moa: "Release glycogen stores in liver and muscles",
-                indications: "Hypoglycemia < 70 mg/dl",
-                contraindications: "Hypersensivity",
-                desiredEffects: "Blood Glucose Levels in normal range",
-                preCautions: "Allergies, frequent low blood sugar",
-                sideEffects: "Nausea, vomiting, headache"
-            },
-            {
-                title: "Activated Charcoal",
-                tradeName: "Insta-Char, Charcoal Aid, Liqui-char",
-                genericName: "Activated Charcoal",
-                class: "Organic Carbon Compound",
-                route: "Oral",
-                dosage: "250 mg",
-                moa: "Binds to chemical/drug in body",
-                indications: "Acute ingested poisoning",
-                contraindications: "unprotected airway, intestinal obstruction, caustic ingestions",
-                desiredEffects: "Helps prevent poison from being absorbed by the stomach into the body",
-                preCautions: "Does not bind to all toxins, vomiting",
-                sideEffects: "Black stool, constipation, abdominal cramping, dehydration"
-            },
-            {
-                title: "Albuterol",
-                tradeName: "Proventic, ProAir",
-                genericName: "Albuterol Sulfate",
-                class: "andrenergic Bronchodilator",
-                route: "Inhalation",
-                dosage: "Adults=(3x) 2.5-5 mg Nebulizor, Peds=(3x) 2.5 mg Nebulizor",
-                moa: "B2 Agonist for inducing relaxation in bronchioles",
-                indications: "Respitory distress from bronchospasms, Asthma, wheezing",
-                contraindications: "Allergy",
-                desiredEffects: "Relax smooth bronchiole muscles, open lower airway, ease breathing",
-                preCautions: "Careful handling especially around heat, use own prescription",
-                sideEffects: "tremors, headache, throat irritation, dizziness"
-            },
-            {
-                title: "Oxygen",
-                tradeName: "Oxygen",
-                genericName: "Oxygen",
-                class: "Medical Gas",
-                route: "Nasal Canula, Non-rebreather, Bag-valve mask",
-                dosage: "NC=1-6L, NRB=10-15L, BVM=15-25L",
-                moa: "Restores O2 saturation",
-                indications: "Any condition with increased cardiac workload, respitory distress, or lack of perfusion",
-                contraindications: "none",
-                desiredEffects: "Increase the amount of oxygen in the bloodstream, restore normal cellular activity",
-                preCautions: "turn off when not in use, keep away from open flame",
-                sideEffects: "Headaches, sleepiness, nose/throat dryness"
-            },
-            {
-                title: "Nitroglycerin",
-                tradeName: "NitroStat, Nitro mist",
-                genericName: "Nitroglycerin",
-                class: "nitrates, angina",
-                route: "Sublingual",
-                dosage: "0.4 mg / 5 minutes (max 3x), No pediatrics",
-                moa: "Cuases Vasodilation",
-                indications: "Chest Pain of Cardiac Origin",
-                contraindications: "Recent use of ED meds, Hypotension, Head Injury",
-                desiredEffects: "Chest Pain Relief, increased blood flow to the heart, originally used for pulminary hypertension in women",
-                preCautions: "low BP close to 100 systolic",
-                sideEffects: "Headache, hypotension, Nausea, flushed in the face"
-            },
-            {
-                title: "Benadryl",
-                tradeName: "Benadryl",
-                genericName: "Diphenhydramine",
-                class: "Anti-histamine",
-                route: "IV, IO, IM, PO",
-                dosage: "Adult=25-50 mg, Peds over 3 months=1 mg/kg",
-                moa: "Blocks Histamines, H1 receptor antagonist",
-                indications: "Allergic reactions with a patent airway",
-                contraindications: "Hypersensitivity, lower respatory tract disease, premature infants, seizure disorders",
-                desiredEffects: "Reduce allergy sypmtoms",
-                preCautions: "Driving, operating heavy machinery",
-                sideEffects: "sleepiness, drymoth, throat"
-            },
-            {
-                title: "Epinephrine 1:1000",
-                tradeName: "Adrenalin",
-                genericName: "Epinephrine",
-                class: "Sympathominetic",
-                route: "Intramuscular",
-                dosage: "Adult = 0.3-0.5 mg, Peds=0.01 mg/kg",
-                moa: "Acts on Alpha Receptors to contract blood vessels and Beta 2 receptors",
-                indications: "Anaphylaxsis",
-                contraindications: "Arrythmias, severe hypertension, none for life threatening situations",
-                desiredEffects: "Vaso constriction and bronchodilation",
-                preCautions: "cardiovascular disease, hyperthyroidism, pregnancy, diabetes",
-                sideEffects: "Tachycardia, Arythmia, Pulmonary Edema"
-            },
-            {
-                title: "Tylenol",
-                tradeName: "Tylenol",
-                genericName: "Acetaminophen",
-                class: "Analgesics",
-                route: "Oral, rectal for neonates",
-                dosage: "Adults=500-1000 mg, Peds=15 mg/kg, wakemed has 160mg/5ml vials",
-                moa: "Binds to receptors in the body",
-                indications: "fever and pain control",
-                contraindications: "Hypersensitivity, liver disease, kidney disease",
-                desiredEffects: "Relief for mild pain or fever, headache, muscle ache",
-                preCautions: "allergic reaction",
-                sideEffects: "Nausea Fatigue"
-            },
-            {
-                title: "Narcan",
-                tradeName: "Narcan",
-                genericName: "Naloxone",
-                class: "Opiod Antagonist",
-                route: "Intranasal",
-                dosage: "Adult=0.4-2 mg, Peds=0.1 mg/kg",
-                moa: "Binds to opioid receptors, reversing effects of overdose",
-                indications: "respitory depression, Opioid overdose, pinpoint pupils",
-                contraindications: "Hypersensitivity",
-                desiredEffects: "Restore normal respitory drive",
-                preCautions: "Withdrawal symptoms, potential for a turn to respitory depression",
-                sideEffects: "Headache, sweating, seizures, Nausea, Tachycardia"
-            },
-            {
-                title: "Afrin",
-                tradeName: "Afrin, Clearquil",
-                genericName: "Oxymetzoline",
-                class: "Decongestant",
-                route: "Intranasal",
-                dosage: "2-3 sprays every 10-12 hours",
-                moa: "Alpha-adrenergic agonist stimulates receptors and produces vaso-constriction in arterioles of nasal mucosa",
-                indications: "Epistaxis",
-                contraindications: "Hypersensitivity",
-                desiredEffects: "relieve/stop epistaxis",
-                preCautions: "allergies, high BP, Diabetes",
-                sideEffects: "Burning, stinging, dryness, runny nose"
-            },
-            {
-                title: "Ibuprofen",
-                tradeName: "Advil, Motrin",
-                genericName: "Ibuprofin",
-                class: "NSAID",
-                route: "Oral",
-                dosage: "Adult=400-800 mg, Peds=10 mg/kg",
-                moa: "Non-selective reversible inhibition cox 1-2 enzymes",
-                indications: "fever, pain",
-                contraindications: "Allergy, GI bleed, renal failure, anti-coagulant, prescription use",
-                desiredEffects: "fever reduction, pain relief",
-                preCautions: "pregnancy, long term use can cause renal failure",
-                sideEffects: "Nausea, vomiting, headache, upset stomach"
-            },
-            {
-                title: "Atropine/Prolidoxime (2 PAM auto)",
-                tradeName: "2-PAM, Protopam",
-                genericName: "Prolidoxime",
-                class: "oxime",
-                route: "Intramuscular",
-                dosage: "1 auto injector (A,P)",
-                moa: "Used to reactivate acetycholinesterase by promoting dephosphorylatium",
-                indications: "Antidote for nerve agents or organophosphate overdose",
-                contraindications: "none",
-                desiredEffects: "Reverse nerve agents/ organophosphate overdose",
-                preCautions: "Patients with known cardiovascular disease",
-                sideEffects: "Pain, blurred vision, dizziness, drowsiness, headaches"
-            }
-        ];
-
-        let currentCardIndex = 0;
-
-        function createFlashcardHTML(cardData) {
-            return `
-                <div class="flashcard-section">
-                    <div class="flashcard-title">
-                        ${cardData.title}
-                    </div>
-                    <div class="flashcard-content">
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Trade Name</div>
-                            <div class="flashcard-text">${cardData.tradeName}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Generic Name</div>
-                            <div class="flashcard-text">${cardData.genericName}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Class</div>
-                            <div class="flashcard-text">${cardData.class}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Route</div>
-                            <div class="flashcard-text">${cardData.route}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Dosage</div>
-                            <div class="flashcard-text">${cardData.dosage}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">MOA</div>
-                            <div class="flashcard-text">${cardData.moa}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Indications</div>
-                            <div class="flashcard-text">${cardData.indications}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Contraindications</div>
-                            <div class="flashcard-text">${cardData.contraindications}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Desired Effects</div>
-                            <div class="flashcard-text">${cardData.desiredEffects}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Precautions</div>
-                            <div class="flashcard-text">${cardData.preCautions}</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="flashcard-label">Side Effects</div>
-                            <div class="flashcard-text">${cardData.sideEffects}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
+    function showResults(userAnswers) {
+      const resultsDiv = document.getElementById('results');
+      let correct = 0;
+      let html = '<h3>Results:</h3><ol>';
+      quizStreets.forEach((street, idx) => {
+        const user = (userAnswers[idx] || '').trim();
+        const answer = street.name;
+        if (user.toLowerCase() === answer.toLowerCase()) {
+          html += `<li><span class="correct">✔ ${answer}</span></li>`;
+          correct++;
+        } else {
+          html += `<li><span class="incorrect">✘ ${user || '(blank)'}</span> <span style="color:#888;">(Correct: ${answer})</span></li>`;
         }
+      });
+      html += '</ol>';
+      html += `<b>Score: ${correct} / ${quizStreets.length}</b>`;
+      resultsDiv.innerHTML = html;
+    }
 
-        function showCard(index) {
-            const container = document.getElementById('flashcardContainer');
-            container.innerHTML = createFlashcardHTML(flashcardsData[index]);
-            document.getElementById('currentCard').textContent = index + 1;
-            document.getElementById('cardSelect').value = index;
+    function resetQuiz() {
+      quizStarted = false;
+      document.getElementById('start-quiz-btn').style.display = '';
+      document.getElementById('reset-btn').style.display = 'none';
+      document.getElementById('quiz-form').style.display = 'none';
+      document.getElementById('results').innerHTML = '';
+      clearMarkers();
+      
+      // Restore original tile layer with street names
+      map.eachLayer(function(layer) {
+        if (layer instanceof L.TileLayer) {
+          map.removeLayer(layer);
         }
+      });
+      originalTileLayer.addTo(map);
+    }
 
-        function nextCard() {
-            currentCardIndex = (currentCardIndex + 1) % flashcardsData.length;
-            showCard(currentCardIndex);
+    window.onload = function() {
+      // Default: Downtown Raleigh, NC
+      map = L.map('map').setView([35.7796, -78.6382], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      
+      // Store reference to the original tile layer
+      originalTileLayer = map._layers[Object.keys(map._layers)[0]];
+
+      document.getElementById('start-quiz-btn').onclick = async function() {
+        document.getElementById('start-quiz-btn').disabled = true;
+        document.getElementById('start-quiz-btn').textContent = 'Loading...';
+        const bounds = map.getBounds();
+        if (!bounds) {
+          alert("Please wait for the map to load.");
+          document.getElementById('start-quiz-btn').disabled = false;
+          document.getElementById('start-quiz-btn').textContent = 'Start Quiz';
+          return;
         }
-
-        function previousCard() {
-            currentCardIndex = (currentCardIndex - 1 + flashcardsData.length) % flashcardsData.length;
-            showCard(currentCardIndex);
+        try {
+          const streets = await fetchStreetNames(bounds);
+          if (streets.length < 3) {
+            alert("Not enough streets found in this area. Please zoom out or move the map.");
+            document.getElementById('start-quiz-btn').disabled = false;
+            document.getElementById('start-quiz-btn').textContent = 'Start Quiz';
+            return;
+          }
+          startQuiz(streets);
+        } catch (e) {
+          console.error("Error details:", e);
+          alert(`Failed to fetch street data: ${e.message}. Check console for details.`);
         }
+        document.getElementById('start-quiz-btn').disabled = false;
+        document.getElementById('start-quiz-btn').textContent = 'Start Quiz';
+      };
 
-        function selectCard(index) {
-            currentCardIndex = parseInt(index);
-            showCard(currentCardIndex);
+      document.getElementById('reset-btn').onclick = resetQuiz;
+
+      document.getElementById('quiz-form').onsubmit = function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const userAnswers = [];
+        for (let i = 0; i < quizStreets.length; i++) {
+          userAnswers.push(formData.get('street' + i));
         }
-
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-            if (sectionId === 'flashcards') {
-                showCard(currentCardIndex);
-            }
-        }
-
-        // Initialize the first card when the page loads
-        window.onload = function() {
-            showCard(currentCardIndex);
-        };
-    </script>
+        showResults(userAnswers);
+      };
+    };
+  </script>
 </body>
 </html>
-
-
-
 
